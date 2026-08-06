@@ -53,6 +53,15 @@ Before running the CLI, ensure you have:
 3. Valid IAM credentials / Role with least-privilege permissions for EC2, S3, Route53, and SSM.
 
 ---
+## 📦 Installation
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/EthicalNayro/platform-cli.git
+   cd platform-cli
+   ```
+
+   
 
 
    
