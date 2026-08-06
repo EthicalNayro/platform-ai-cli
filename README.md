@@ -1,4 +1,4 @@
-# 🚀 Platform Engineering CLI — AWS Self-Service Provisioning
+# 🚀 Platform Engineering CLI - AWS Self-Service Provisioning
 
 A robust Python-based Self-Service CLI tool designed for developers to provision and manage AWS resources (`EC2`, `S3`, `Route53`) within strict operational guardrails and security standards.
 
