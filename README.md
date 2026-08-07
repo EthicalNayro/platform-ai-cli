@@ -168,41 +168,22 @@ python cli.py route53 list
 
 ## EC2 Operations Verification
 
-```text
-$ python cli.py ec2 create --type t3.micro --name app-worker
-Success: Created EC2 instance i-0a1b2c3d4e5f6g7h8 (t3.micro, ubuntu)
-
-$ python cli.py ec2 list
-ID: i-0a1b2c3d4e5f6g7h8 | Name: app-worker | State: running | Type: t3.micro
-
-$ python cli.py ec2 create --type t3.micro --name app-worker-2
-Error: Hard cap limit reached! Maximum 2 running/pending CLI instances allowed.
-```
+![awscli](Python-ex/aws-cli.png)
+![hardcap](Python-ex/hardcap.png)
 
 ---
 
 ## S3 Operations Verification
 
-```text
-$ python cli.py s3 create --name dev-bucket-demo-2026 --public
-Are you sure you want to create a PUBLIC bucket? [y/N]: y
-Success: Bucket 'dev-bucket-demo-2026' created (PUBLIC) in region 'us-east-1'
-
-$ python cli.py s3 upload dev-bucket-demo-2026 build-artifact.zip
-Success: Uploaded 'build-artifact.zip' to 'dev-bucket-demo-2026/build-artifact.zip'
-```
+![bucket](Python-ex/buckets.png)
+![echo](Python-ex/echo.png)
+![guardrails](Python-ex/guardrails.png)
 
 ---
 
 ## Route53 Operations Verification
 
-```text
-$ python cli.py route53 create-zone --name team.dev
-Success: Hosted Zone created: Z0123456789 (team.dev)
-
-$ python cli.py route53 create-record --zone-id Z0123456789 --name backend.team.dev --type A --value 192.168.1.10
-Success: UPSERT record 'backend.team.dev' -> 192.168.1.10 (A)
-```
+![guardrails](Python-ex/route53guard.png)
 
 ---
 
@@ -215,6 +196,7 @@ To destroy resources created by this tool without affecting non-CLI environments
 ```bash
 aws ec2 terminate-instances --instance-ids <INSTANCE_ID>
 ```
+![ec2ter](Python-ex/ec2ter.png)
 
 ## Empty and Delete S3 Buckets
 
@@ -222,9 +204,11 @@ aws ec2 terminate-instances --instance-ids <INSTANCE_ID>
 aws s3 rm s3://<BUCKET_NAME> --recursive
 aws s3api delete-bucket --bucket <BUCKET_NAME>
 ```
+![s3ter](Python-ex/s3rm.png)
 
 ## Delete Route53 Hosted Zones
 
 ```bash
 aws route53 delete-hosted-zone --id <ZONE_ID>
 ```
+![route53rm](Python-ex/route53rm.png)
