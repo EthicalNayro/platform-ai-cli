@@ -1,6 +1,5 @@
-# 🚀 GuardedAgent — Zero-Trust AI Agent for AWS Infrastructure Management
+# 🚀 GuardedAgent - Zero-Trust AI Agent for AWS Infrastructure Management
 Secure, natural-language CloudOps powered by Amazon Bedrock, pre-model injection scanning, and deterministic policy guardrails.
-
 A robust Python-based Self-Service CLI tool designed for developers to provision and manage AWS resources (`EC2`, `S3`, `Route53`) within strict operational guardrails and security standards.
 
 Built using **Python 3**, **Boto3**, and **Click**.
