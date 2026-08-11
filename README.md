@@ -92,10 +92,10 @@ Every resource created by the CLI is tagged automatically to enforce governance,
 
 | **Tag Key** | **Example Value** | **Description** |
 |--------------|-------------------|-----------------|
-| `CreatedBy` | `platform-cli` | Mandatory identifier for CLI ownership validation[cite: 1]. |
-| `Owner` | `Your-Name` / `IAM-Role` | Extracted dynamically via AWS STS Caller Identity[cite: 1]. |
-| `Project` | `platform` | Project/Workload namespace[cite: 1]. |
-| `Environment` | `dev` | Target deployment environment[cite: 1]. |
+| `CreatedBy` | `platform-cli` | Mandatory identifier for CLI ownership validation. |
+| `Owner` | `Your-Name` / `IAM-Role` | Extracted dynamically via AWS STS Caller Identity. |
+| `Project` | `platform` | Project/Workload namespace. |
+| `Environment` | `dev` | Target deployment environment. |
    
 
 
@@ -156,11 +156,11 @@ python cli.py route53 list
 
 # 🔒 Security Controls
 
-- **Zero Hardcoded Credentials:** The CLI relies entirely on AWS SDK standard credential provider chain (IAM Roles, AWS Environment Variables, or ~/.aws/credentials)[cite: 1].
+- **Zero Hardcoded Credentials:** The CLI relies entirely on AWS SDK standard credential provider chain (IAM Roles, AWS Environment Variables, or ~/.aws/credentials).
 
-- **Strict Parameter Enforcement:** Prevents accidental provisioning of non-allowed instance types[cite: 1].
+- **Strict Parameter Enforcement:** Prevents accidental provisioning of non-allowed instance types.
 
-- **No Unintended Destructive Actions:** Non-CLI resources are invisible and untouchable by the tool[cite: 1].
+- **No Unintended Destructive Actions:** Non-CLI resources are invisible and untouchable by the tool.
 
 ---
 
@@ -189,7 +189,7 @@ python cli.py route53 list
 
 # 🧹 Cleanup Guide
 
-To destroy resources created by this tool without affecting non-CLI environments, target resources tagged with `CreatedBy=platform-cli`[cite: 1]:
+To destroy resources created by this tool without affecting non-CLI environments, target resources tagged with `CreatedBy=platform-cli`:
 
 ## Terminate EC2 Instances
 
