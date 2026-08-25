@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640" role="img" aria-labelledby="title desc">
+  <title id="title">Platform AI CLI social preview</title>
+  <desc id="desc">A guarded Amazon Bedrock agent for AWS infrastructure management.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#07131f"/><stop offset="1" stop-color="#0b223a"/>
+    </linearGradient>
+    <linearGradient id="purple" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#6f4cff"/><stop offset="1" stop-color="#a266ff"/>
+    </linearGradient>
+    <linearGradient id="green" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#00a987"/><stop offset="1" stop-color="#18d0a5"/>
+    </linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#27435e" stroke-width="1" opacity=".28"/>
+    </pattern>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#000" flood-opacity=".3"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0L10 5 0 10z" fill="#56baff"/>
+    </marker>
+  </defs>
+
+  <rect width="1280" height="640" fill="url(#bg)"/>
+  <rect width="1280" height="640" fill="url(#grid)"/>
+  <circle cx="1195" cy="8" r="245" fill="#173d6b" opacity=".38"/>
+  <circle cx="48" cy="664" r="185" fill="#30286d" opacity=".3"/>
+
+  <g transform="translate(67 55)">
+    <rect width="58" height="58" rx="16" fill="#312413" stroke="#ff9900" stroke-width="2"/>
+    <text x="29" y="36" text-anchor="middle" fill="#ffad32" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="19" font-weight="800">AWS</text>
+    <text x="82" y="22" fill="#8ca8c2" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="15" font-weight="700" letter-spacing="3">DEVOPS · AI SECURITY</text>
+    <text x="82" y="49" fill="#d9e4ed" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="17">EthicalNayro / platform-ai-cli</text>
+  </g>
+
+  <text x="67" y="211" fill="#f5f8fb" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="62" font-weight="750">Platform AI CLI</text>
+  <text x="67" y="270" fill="#f5f8fb" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="35" font-weight="500">Guarded AWS operations with</text>
+  <text x="67" y="317" fill="#a67cff" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="35" font-weight="750">Amazon Bedrock</text>
+  <text x="67" y="369" fill="#91aac1" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="22">Natural language · deterministic policy · audit trail</text>
+
+  <g font-family="Inter,Segoe UI,Arial,sans-serif" font-size="17" font-weight="700">
+    <rect x="67" y="411" width="100" height="39" rx="19" fill="#1b3650"/><text x="117" y="437" text-anchor="middle" fill="#b6dcf7">Python</text>
+    <rect x="179" y="411" width="105" height="39" rx="19" fill="#30255a"/><text x="231" y="437" text-anchor="middle" fill="#d8c9ff">Bedrock</text>
+    <rect x="296" y="411" width="82" height="39" rx="19" fill="#443018"/><text x="337" y="437" text-anchor="middle" fill="#ffd18a">EC2</text>
+    <rect x="390" y="411" width="72" height="39" rx="19" fill="#443018"/><text x="426" y="437" text-anchor="middle" fill="#ffd18a">S3</text>
+    <rect x="474" y="411" width="126" height="39" rx="19" fill="#123d36"/><text x="537" y="437" text-anchor="middle" fill="#a8f0df">Guardrails</text>
+  </g>
+
+  <g transform="translate(680 116)">
+    <rect width="528" height="372" rx="31" fill="#102941" stroke="#315878" stroke-width="2"/>
+    <text x="42" y="54" fill="#8aa8c4" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="16" font-weight="700" letter-spacing="3">ZERO-TRUST EXECUTION FLOW</text>
+
+    <g font-family="Inter,Segoe UI,Arial,sans-serif">
+      <rect x="42" y="91" width="128" height="76" rx="17" fill="#1c193a" stroke="#795bff" stroke-width="2"/>
+      <circle cx="73" cy="124" r="15" fill="url(#purple)"/>
+      <path d="M66 125c4-10 10-10 15 0" fill="none" stroke="#fff" stroke-width="2"/>
+      <text x="96" y="122" fill="#f2eeff" font-size="17" font-weight="700">Bedrock</text>
+      <text x="96" y="145" fill="#aaa1d9" font-size="13">tool choice</text>
+
+      <rect x="200" y="91" width="128" height="76" rx="17" fill="#0e3831" stroke="#19c7a0" stroke-width="2"/>
+      <path d="M231 108l16 6v12c0 11-8 19-16 23-8-4-16-12-16-23v-12z" fill="url(#green)"/>
+      <path d="M223 127l6 6 11-14" fill="none" stroke="#fff" stroke-width="2.5"/>
+      <text x="254" y="122" fill="#edfff9" font-size="17" font-weight="700">Policy</text>
+      <text x="254" y="145" fill="#91d9ca" font-size="13">hard checks</text>
+
+      <rect x="358" y="91" width="128" height="76" rx="17" fill="#392812" stroke="#ff9900" stroke-width="2"/>
+      <text x="422" y="124" text-anchor="middle" fill="#ffad32" font-size="21" font-weight="800">AWS</text>
+      <text x="422" y="149" text-anchor="middle" fill="#d8b97d" font-size="13" font-weight="700">EC2 · S3</text>
+
+      <path d="M170 129h22M328 129h22" fill="none" stroke="#56baff" stroke-width="3" marker-end="url(#arrow)"/>
+
+      <rect x="42" y="213" width="444" height="105" rx="20" fill="#0b1e30" stroke="#294c68" stroke-width="2"/>
+      <circle cx="80" cy="252" r="20" fill="#183c57"/>
+      <path d="M70 244h20v18H70zM75 239h10" fill="none" stroke="#62c2ff" stroke-width="2.5"/>
+      <text x="114" y="249" fill="#eef6fb" font-size="19" font-weight="700">Audit every decision</text>
+      <text x="114" y="277" fill="#89a5bc" font-size="14">allowed · blocked · failed · executed</text>
+      <rect x="390" y="238" width="66" height="29" rx="14" fill="#123d36"/>
+      <text x="423" y="258" text-anchor="middle" fill="#9ce7d6" font-size="12" font-weight="700">JSONL</text>
+    </g>
+  </g>
+
+  <line x1="67" y1="547" x2="1211" y2="547" stroke="#31516c" stroke-width="1"/>
+  <text x="67" y="589" fill="#718da6" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="17">The model proposes. Deterministic policy decides.</text>
+  <text x="1211" y="589" text-anchor="end" fill="#b4c6d5" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="17" font-weight="700">github.com/EthicalNayro</text>
+</svg>

@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Platform AI CLI architecture</title>
+  <desc id="desc">Natural-language and CLI interfaces use deterministic guardrails before AWS execution, with audit logging.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#07121f"/>
+      <stop offset="1" stop-color="#0b2038"/>
+    </linearGradient>
+    <linearGradient id="agent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#6d49ff"/>
+      <stop offset="1" stop-color="#9d66ff"/>
+    </linearGradient>
+    <linearGradient id="guard" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#00a987"/>
+      <stop offset="1" stop-color="#15d1a3"/>
+    </linearGradient>
+    <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path d="M48 0H0V48" fill="none" stroke="#24415d" stroke-width="1" opacity=".28"/>
+    </pattern>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000" flood-opacity=".28"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0L10 5 0 10z" fill="#54b9ff"/>
+    </marker>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <rect width="1600" height="900" fill="url(#grid)"/>
+  <circle cx="1480" cy="60" r="260" fill="#143a67" opacity=".34"/>
+  <circle cx="80" cy="860" r="240" fill="#292a72" opacity=".25"/>
+
+  <text x="90" y="88" fill="#8aa8c5" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="22" font-weight="700" letter-spacing="5">DEVOPS · CLOUD SECURITY · AI AGENTS</text>
+  <text x="90" y="155" fill="#f5f8fb" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="54" font-weight="700">Platform AI CLI Architecture</text>
+  <text x="90" y="201" fill="#94abc2" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="25">The model proposes. Deterministic policy decides. AWS executes.</text>
+
+  <g>
+    <rect x="90" y="292" width="240" height="124" rx="24" fill="#102941" stroke="#3e6b93" stroke-width="2"/>
+    <circle cx="137" cy="338" r="22" fill="#54b9ff" opacity=".18"/>
+    <path d="M127 339h20M137 329v20" stroke="#63c1ff" stroke-width="4" stroke-linecap="round"/>
+    <text x="175" y="344" fill="#f4f8fc" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="27" font-weight="700">User</text>
+    <text x="120" y="382" fill="#91aac2" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="19">Natural language</text>
+
+    <rect x="90" y="494" width="240" height="124" rx="24" fill="#102941" stroke="#3e6b93" stroke-width="2"/>
+    <rect x="119" y="531" width="39" height="31" rx="5" fill="#54b9ff" opacity=".2" stroke="#63c1ff" stroke-width="2"/>
+    <path d="M128 541l7 6-7 6M140 554h9" fill="none" stroke="#63c1ff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="175" y="546" fill="#f4f8fc" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="27" font-weight="700">Python CLI</text>
+    <text x="120" y="584" fill="#91aac2" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="19">Click commands</text>
+
+    <rect x="410" y="292" width="250" height="124" rx="24" fill="#1a1838" stroke="#7c5cff" stroke-width="2"/>
+    <path d="M450 326l20 10v24l-20 10-20-10v-24z" fill="url(#agent)"/>
+    <circle cx="443" cy="347" r="3" fill="#fff"/><circle cx="457" cy="347" r="3" fill="#fff"/>
+    <text x="492" y="344" fill="#f5f2ff" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="25" font-weight="700">Input Scan</text>
+    <text x="440" y="382" fill="#aaa1d9" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="18">Pre-model detection</text>
+
+    <rect x="735" y="292" width="250" height="124" rx="24" fill="#1a1838" stroke="#7c5cff" stroke-width="2"/>
+    <circle cx="782" cy="347" r="23" fill="url(#agent)"/>
+    <path d="M770 349c7-16 16-16 24 0M774 356h16" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+    <text x="824" y="344" fill="#f5f2ff" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="25" font-weight="700">Bedrock</text>
+    <text x="765" y="382" fill="#aaa1d9" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="18">Structured tool choice</text>
+
+    <rect x="1060" y="292" width="260" height="124" rx="24" fill="#0d342f" stroke="#18c7a0" stroke-width="2"/>
+    <path d="M1105 324l24 9v19c0 17-12 29-24 35-12-6-24-18-24-35v-19z" fill="url(#guard)"/>
+    <path d="M1093 351l9 9 16-19" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="1150" y="344" fill="#effffb" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="24" font-weight="700">Guardrails</text>
+    <text x="1088" y="382" fill="#8bd6c6" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="18">Policy + ownership</text>
+
+    <rect x="1060" y="494" width="260" height="124" rx="24" fill="#0d342f" stroke="#18c7a0" stroke-width="2"/>
+    <circle cx="1106" cy="548" r="22" fill="#18c7a0" opacity=".2"/>
+    <path d="M1096 548h20M1106 538v20" stroke="#30e1b7" stroke-width="4" stroke-linecap="round"/>
+    <text x="1150" y="546" fill="#effffb" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="24" font-weight="700">AWS SDK</text>
+    <text x="1088" y="584" fill="#8bd6c6" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="18">Approved execution</text>
+
+    <rect x="1390" y="292" width="150" height="326" rx="28" fill="#312413" stroke="#ff9900" stroke-width="2"/>
+    <text x="1465" y="349" text-anchor="middle" fill="#ffad32" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="30" font-weight="800">AWS</text>
+    <rect x="1415" y="387" width="100" height="52" rx="13" fill="#4b3417"/>
+    <text x="1465" y="420" text-anchor="middle" fill="#ffd087" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="19" font-weight="700">EC2</text>
+    <rect x="1415" y="461" width="100" height="52" rx="13" fill="#4b3417"/>
+    <text x="1465" y="494" text-anchor="middle" fill="#ffd087" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="19" font-weight="700">S3</text>
+    <rect x="1415" y="535" width="100" height="52" rx="13" fill="#4b3417"/>
+    <text x="1465" y="568" text-anchor="middle" fill="#ffd087" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="18" font-weight="700">Route53</text>
+  </g>
+
+  <g fill="none" stroke="#54b9ff" stroke-width="4" marker-end="url(#arrow)">
+    <path d="M330 354H395"/>
+    <path d="M660 354H720"/>
+    <path d="M985 354H1045"/>
+    <path d="M1190 416V479"/>
+    <path d="M1320 556H1375"/>
+    <path d="M330 556H1045"/>
+  </g>
+
+  <g>
+    <rect x="410" y="694" width="910" height="92" rx="22" fill="#102941" stroke="#3e6b93" stroke-width="2"/>
+    <circle cx="463" cy="740" r="22" fill="#54b9ff" opacity=".18"/>
+    <path d="M451 730h24v21h-24zM456 725h14" fill="none" stroke="#63c1ff" stroke-width="3" stroke-linejoin="round"/>
+    <text x="505" y="735" fill="#f4f8fc" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="24" font-weight="700">Append-only audit trail</text>
+    <text x="505" y="765" fill="#91aac2" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="18">Requests · blocked actions · failures · executions</text>
+    <path d="M1190 618v60c0 9-7 16-16 16" fill="none" stroke="#54b9ff" stroke-width="4" marker-end="url(#arrow)"/>
+  </g>
+
+  <text x="90" y="852" fill="#6885a0" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="19">Portfolio lab · deterministic controls remain outside the model</text>
+  <text x="1510" y="852" text-anchor="end" fill="#a9bdcf" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="19" font-weight="700">github.com/EthicalNayro</text>
+</svg>

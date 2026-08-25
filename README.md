@@ -1,214 +1,187 @@
-# 🚀 GuardedAgent - Zero-Trust AI Agent for AWS Infrastructure Management
-Secure, natural-language CloudOps powered by Amazon Bedrock, pre-model injection scanning, and deterministic policy guardrails.
-A robust Python-based Self-Service CLI tool designed for developers to provision and manage AWS resources (`EC2`, `S3`, `Route53`) within strict operational guardrails and security standards.
+# Platform AI CLI
 
-Built using **Python 3**, **Boto3**, and **Click**.
+[![CI](https://github.com/EthicalNayro/platform-ai-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/EthicalNayro/platform-ai-cli/actions/workflows/ci.yml)
+![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)
+![AWS](https://img.shields.io/badge/AWS-Bedrock%20%7C%20EC2%20%7C%20S3%20%7C%20Route53-FF9900?logo=amazonaws&logoColor=white)
 
----
+A guarded self-service interface for managing selected AWS resources through either a conventional Python CLI or natural-language requests powered by Amazon Bedrock.
 
-## 📋 Table of Contents
-- [Overview & Architecture](#-overview--architecture)
-- [Key Features & Guardrails](#-key-features--guardrails)
-- [Prerequisites](#-prerequisites)
-- [Installation](#-installation)
-- [Tagging Specification](#-tagging-specification)
-- [Usage Examples](#-usage-examples)
-  - [EC2 Management](#1-ec2-instances)
-  - [S3 Management](#2-s3-buckets)
-  - [Route53 Management](#3-route53-dns)
-- [Security Controls](#-security-controls)
-- [Demo Evidence](#-demo-evidence)
-- [Cleanup Guide](#-cleanup-guide)
+The project explores a practical question: **how can an AI agent receive real infrastructure tools without receiving permission to bypass the platform's rules?**
 
----
+## Architecture
 
-## 🏗️ Overview & Architecture
+![Platform AI CLI architecture](docs/architecture.svg)
 
-The Platform CLI serves as an abstraction layer over AWS services, enabling developers to request development infrastructure independently while guaranteeing:
-* **Scope Isolation**: Operations (`start`, `stop`, `upload`, `record updates`) are strictly limited to resources created by this tool.
-* **Resource Optimization**: Cost-saving limits on instance counts and allowed types.
-* **Compliance**: Standardized metadata tagging across all provisioned resources.
+The Bedrock model selects a tool, but it never calls AWS directly. Every proposed action passes through deterministic policy checks and a resource-ownership check before execution. The same `CreatedBy=platform-cli` boundary used by the human-facing CLI also applies to the agent.
 
----
+## What It Demonstrates
 
-## 🛡️ Key Features & Guardrails
+- **Self-service CloudOps:** manage EC2, S3, and Route53 through a Python/Click CLI.
+- **Guarded agentic operations:** use Amazon Bedrock to translate natural language into supported EC2 and S3 tool calls.
+- **Zero-trust agent design:** treat model output as untrusted input and validate every action before execution.
+- **Resource scope isolation:** management operations are restricted to resources tagged `CreatedBy=platform-cli`.
+- **Cost controls:** only `t3.micro` and `t2.small` instances are allowed, with a maximum of two non-terminated managed instances.
+- **Human approval:** destructive actions and S3 public-access changes require explicit confirmation.
+- **Auditability:** requests, blocked actions, failed actions, and executed actions are written to an append-only JSONL audit log.
 
-| Service | Feature | Enforced Constraint / Guardrail |
-| :--- | :--- | :--- |
-| **EC2** | Instance Creation | Allowed types strictly restricted to `t3.micro` or `t2.small`. |
-| **EC2** | Capacity Hard Cap | Maximum **2** running/pending CLI-managed instances per account. |
-| **EC2** | AMI Resolution | Auto-fetches latest stable **Ubuntu 22.04** or **Amazon Linux 2023** via SSM Parameter Store. |
-| **EC2** | Management | `start`/`stop` restricted exclusively to `platform-cli` tagged instances. |
-| **S3** | Bucket Creation | Defaults to private with Block Public Access enabled; public creation requires explicit confirmation. |
-| **S3** | File Upload | Uploads allowed ONLY to CLI-tagged buckets. |
-| **Route53**| DNS Zones & Records | Record creation/deletion strictly scoped to CLI-owned Hosted Zones. |
+## Interfaces and Supported Operations
 
----
+| Service | Python CLI | Bedrock Agent | Enforced policy |
+|---|---:|---:|---|
+| EC2 | Create, list, start, stop | Create, list, stop, terminate | Allowed types, two-instance limit, ownership tag, confirmation before termination |
+| S3 | Create, list, upload | Create, list | Private by default, ownership tag, confirmation before changing public-access controls |
+| Route53 | Create/list zones, create/delete records | Not exposed | Hosted-zone ownership tag |
 
-## 🔧 Prerequisites
+## Security Flow
 
-Before running the CLI, ensure you have:
-1. **Python 3.9+** installed.
-2. **AWS CLI** installed and configured (`aws configure`).
-3. Valid IAM credentials / Role with least-privilege permissions for EC2, S3, Route53, and SSM.
+1. Raw user input is scanned for common prompt-injection phrases before it reaches the model.
+2. Amazon Bedrock selects one of the explicitly defined tools and supplies structured arguments.
+3. `guardrails.py` applies deterministic action policy; the model cannot override it.
+4. `tools.py` independently validates resource ownership and operational limits at execution time.
+5. The AWS SDK performs the approved operation using the standard credential provider chain.
+6. The decision and result are recorded in `audit_log.jsonl`, and the model summarizes the outcome.
 
----
-## 📦 Installation
+This layered design means a clean prompt is not automatically trusted, and a valid-looking resource ID is not automatically authorized.
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/EthicalNayro/platform-cli.git
-   cd platform-cli
-   ```
-## 2. Set up a virtual environment
+## Guardrails
 
-### Linux/Mac
+| Control | Enforcement point |
+|---|---|
+| Prompt-injection pattern scan | Before model invocation |
+| EC2 instance-type allowlist | Before execution and inside the execution layer |
+| Maximum two managed EC2 instances | Inside the AWS execution layer |
+| `CreatedBy=platform-cli` ownership validation | Immediately before stop/terminate/upload/record operations |
+| Explicit confirmation for destructive actions | Before the tool can execute |
+| S3 Block Public Access enabled by default | During bucket creation |
+| No hardcoded AWS credentials | Boto3 credential provider chain |
+| Structured JSONL audit trail | At request, block, failure, and execution events |
+
+## Quick Start
+
+### Prerequisites
+
+- Python 3.10+
+- AWS CLI configured with an IAM identity or role
+- Least-privilege access to the AWS services you intend to use
+- Amazon Bedrock model access in `eu-west-1` for agent mode
 
 ```bash
+git clone https://github.com/EthicalNayro/platform-ai-cli.git
+cd platform-ai-cli
+
 python3 -m venv .venv
 source .venv/bin/activate
+pip install -r requirements.txt
 ```
 
-### Windows
+On Windows:
 
-```dos
+```powershell
 python -m venv .venv
 .venv\Scripts\activate
+pip install -r requirements.txt
 ```
 
----
+## CLI Examples
 
-## 3. Install dependencies
-
-```bash
-pip install -r requirements.txt[cite: 1]
-```
-
----
-
-# 🏷️ Tagging Specification
-
-Every resource created by the CLI is tagged automatically to enforce governance, ownership, and policy filtering[cite: 1].
-
-| **Tag Key** | **Example Value** | **Description** |
-|--------------|-------------------|-----------------|
-| `CreatedBy` | `platform-cli` | Mandatory identifier for CLI ownership validation. |
-| `Owner` | `Your-Name` / `IAM-Role` | Extracted dynamically via AWS STS Caller Identity. |
-| `Project` | `platform` | Project/Workload namespace. |
-| `Environment` | `dev` | Target deployment environment. |
-   
-
-
-
-# 💻 Usage Examples
-
-## 1. EC2 Instances
+### EC2
 
 ```bash
-# Create Instance (Ubuntu by default)
-python cli.py ec2 create --type t3.micro --name dev-web-server --os ubuntu
-
-# List CLI Instances Only
+python cli.py ec2 create --type t3.micro --name dev-web --os ubuntu
 python cli.py ec2 list
-
-# Start / Stop Instance (Validates ownership tag)
-python cli.py ec2 stop i-0a1b2c3d4e5f6g7h8
-python cli.py ec2 start i-0a1b2c3d4e5f6g7h8
+python cli.py ec2 stop i-0123456789abcdef0
+python cli.py ec2 start i-0123456789abcdef0
 ```
 
----
-
-## 2. S3 Buckets
+### S3
 
 ```bash
-# Create Private Bucket (Default)
-python cli.py s3 create --name my-company-dev-data-101
-
-# Create Public Bucket (Prompts confirmation)
-python cli.py s3 create --name my-company-public-assets-101 --public
-
-# Upload File to CLI Bucket
-python cli.py s3 upload my-company-dev-data-101 ./app-config.json
-
-# List CLI Buckets Only
+python cli.py s3 create --name unique-private-dev-bucket
+python cli.py s3 upload unique-private-dev-bucket ./app-config.json
 python cli.py s3 list
 ```
 
----
-
-## 3. Route53 DNS
+### Route53
 
 ```bash
-# Create Hosted Zone
-python cli.py route53 create-zone --name dev.internal.domain
-
-# Create / Update DNS Record (UPSERT)
-python cli.py route53 create-record --zone-id Z0123456789 --name api.dev.internal.domain --type A --value 10.0.1.50
-
-# Delete DNS Record
-python cli.py route53 delete-record --zone-id Z0123456789 --name api.dev.internal.domain --type A --value 10.0.1.50
-
-# List CLI Hosted Zones Only
+python cli.py route53 create-zone --name dev.example.com
+python cli.py route53 create-record \
+  --zone-id Z0123456789 \
+  --name api.dev.example.com \
+  --type A \
+  --value 10.0.1.50
 python cli.py route53 list
 ```
 
----
+## Agent Examples
 
-# 🔒 Security Controls
-
-- **Zero Hardcoded Credentials:** The CLI relies entirely on AWS SDK standard credential provider chain (IAM Roles, AWS Environment Variables, or ~/.aws/credentials).
-
-- **Strict Parameter Enforcement:** Prevents accidental provisioning of non-allowed instance types.
-
-- **No Unintended Destructive Actions:** Non-CLI resources are invisible and untouchable by the tool.
-
----
-
-# 📸 Demo Evidence
-
-## EC2 Operations Verification
-
-![awscli](Python-ex/aws-cli.png)
-![hardcap](Python-ex/hardcap.png)
-
----
-
-## S3 Operations Verification
-
-![bucket](Python-ex/buckets.png)
-![echo](Python-ex/echo.png)
-![guardrails](Python-ex/guardrails.png)
-
----
-
-## Route53 Operations Verification
-
-![guardrails](Python-ex/route53guard.png)
-
----
-
-# 🧹 Cleanup Guide
-
-To destroy resources created by this tool without affecting non-CLI environments, target resources tagged with `CreatedBy=platform-cli`:
-
-## Terminate EC2 Instances
+List the configured Bedrock model tiers:
 
 ```bash
-aws ec2 terminate-instances --instance-ids <INSTANCE_ID>
+python agent.py --list-models
 ```
-![ec2ter](Python-ex/ec2ter.png)
 
-## Empty and Delete S3 Buckets
+Use the default low-cost tier:
 
 ```bash
-aws s3 rm s3://<BUCKET_NAME> --recursive
-aws s3api delete-bucket --bucket <BUCKET_NAME>
+python agent.py "List the EC2 instances managed by the platform"
+python agent.py "Create a private S3 bucket named my-unique-dev-bucket"
 ```
-![s3ter](Python-ex/s3rm.png)
 
-## Delete Route53 Hosted Zones
+Choose a different model tier:
 
 ```bash
-aws route53 delete-hosted-zone --id <ZONE_ID>
+python agent.py --model balanced "Stop instance i-0123456789abcdef0"
 ```
-![route53rm](Python-ex/route53rm.png)
+
+Model availability and model IDs can vary by AWS region and account. The configured tiers are defined in `agent.py` so they can be updated without changing the policy or execution layers.
+
+## Resource Tags
+
+| Tag | Example | Purpose |
+|---|---|---|
+| `CreatedBy` | `platform-cli` | Mandatory ownership boundary |
+| `Owner` | IAM caller name | Operational accountability |
+| `Project` | `platform` | Workload grouping |
+| `Environment` | `dev` | Environment classification |
+
+## Validation
+
+GitHub Actions compiles all Python modules and runs unit tests for prompt scanning, confirmation requirements, instance-type policy, tag ownership, and instance counting.
+
+Run the same checks locally:
+
+```bash
+python -m compileall -q agent.py cli.py ec2.py s3.py route53.py guardrails.py tools.py
+python -m unittest discover -s tests -v
+```
+
+## Demo Evidence
+
+| EC2 operations | Capacity guardrail | S3 scope guardrail |
+|---|---|---|
+| ![EC2 CLI output](Python-ex/aws-cli.png) | ![EC2 hard cap](Python-ex/hardcap.png) | ![S3 guardrail](Python-ex/guardrails.png) |
+
+| S3 buckets | Route53 scope guardrail | Resource cleanup |
+|---|---|---|
+| ![Managed S3 buckets](Python-ex/buckets.png) | ![Route53 guardrail](Python-ex/route53guard.png) | ![EC2 cleanup](Python-ex/ec2ter.png) |
+
+## Project Scope
+
+This is a portfolio lab for demonstrating platform automation and guarded agent design, not a production control plane. The injection scanner is intentionally regex-based, the EC2 capacity check is not a distributed concurrency lock, and audit records are stored locally. A production implementation would add centralized immutable logs, identity-aware approvals, stronger content classification, idempotency, policy-as-code, and concurrency-safe quotas.
+
+## Repository Structure
+
+```text
+.
+├── agent.py             # Bedrock conversation and tool-use loop
+├── guardrails.py        # Input scanning, action policy, audit records
+├── tools.py             # Bedrock schemas and guarded AWS execution
+├── cli.py               # Click command entry point
+├── ec2.py               # EC2 CLI operations
+├── s3.py                # S3 CLI operations
+├── route53.py           # Route53 CLI operations
+├── tests/               # Deterministic policy tests
+├── docs/                # Architecture and portfolio visuals
+└── Python-ex/           # Original hands-on demo evidence
+```
