@@ -5,3 +5,4 @@ __pycache__/
 .idea/
 .vscode/
 *.zip
+audit_log.jsonl
