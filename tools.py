@@ -44,12 +44,8 @@ TOOL_DEFINITIONS = [
             "type": "object",
             "properties": {
                 "instance_id": {"type": "string"},
-                "human_confirmed": {
-                    "type": "boolean",
-                    "description": "Must be explicitly supplied by the human and never inferred by the model.",
-                },
             },
-            "required": ["instance_id", "human_confirmed"],
+            "required": ["instance_id"],
         },
     },
     {
@@ -65,7 +61,6 @@ TOOL_DEFINITIONS = [
             "properties": {
                 "name": {"type": "string"},
                 "public": {"type": "boolean", "default": False},
-                "human_confirmed": {"type": "boolean", "default": False},
             },
             "required": ["name"],
         },
@@ -104,8 +99,24 @@ def _managed_instance_count(client) -> int:
     )
 
 
-def execute_tool(tool_name: str, tool_input: dict) -> dict:
-    """Execute a model-selected operation after deterministic guardrail approval."""
+def execute_tool(
+    tool_name: str,
+    tool_input: dict,
+    *,
+    human_confirmed: bool = False,
+) -> dict:
+    """Execute a tool only after policy and trusted-channel approval checks."""
+    # The confirmation value is supplied by the CLI process, never by the LLM.
+    # Recheck it here so a future caller cannot bypass the policy layer.
+    if tool_name == "terminate_instance" and not human_confirmed:
+        return {"error": "Termination blocked: trusted human confirmation is required."}
+    if (
+        tool_name == "create_s3_bucket"
+        and tool_input.get("public")
+        and not human_confirmed
+    ):
+        return {"error": "Public-access change blocked: trusted human confirmation is required."}
+
     ec2_client = boto3.client("ec2")
     s3_client = boto3.client("s3")
     ssm_client = boto3.client("ssm")

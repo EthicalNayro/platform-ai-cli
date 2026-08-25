@@ -25,6 +25,27 @@ import tools
 
 
 class ExecutionScopeTests(unittest.TestCase):
+    def test_model_schema_cannot_supply_human_confirmation(self):
+        for definition in tools.TOOL_DEFINITIONS:
+            properties = definition["input_schema"].get("properties", {})
+            self.assertNotIn("human_confirmed", properties)
+
+    def test_execution_layer_rechecks_termination_confirmation(self):
+        result = tools.execute_tool(
+            "terminate_instance",
+            {"instance_id": "i-managed"},
+            human_confirmed=False,
+        )
+        self.assertIn("trusted human confirmation", result["error"])
+
+    def test_execution_layer_rechecks_public_access_confirmation(self):
+        result = tools.execute_tool(
+            "create_s3_bucket",
+            {"name": "example", "public": True},
+            human_confirmed=False,
+        )
+        self.assertIn("trusted human confirmation", result["error"])
+
     def test_managed_instance_is_recognized(self):
         client = Mock()
         client.describe_instances.return_value = {

@@ -42,8 +42,13 @@ def scan_for_injection(user_input: str) -> tuple[bool, str | None]:
     return False, None
 
 
-def check_action(tool_name: str, tool_input: dict) -> None:
-    """Validate a model-proposed tool call before the AWS execution layer."""
+def check_action(
+    tool_name: str,
+    tool_input: dict,
+    *,
+    human_confirmed: bool = False,
+) -> None:
+    """Validate a model-proposed tool call plus trusted external approval state."""
     if tool_name == "create_ec2_instance":
         instance_type = tool_input.get("instance_type")
         if instance_type not in ALLOWED_INSTANCE_TYPES:
@@ -52,20 +57,20 @@ def check_action(tool_name: str, tool_input: dict) -> None:
                 f"Choose one of {sorted(ALLOWED_INSTANCE_TYPES)}."
             )
 
-    if tool_name in DESTRUCTIVE_ACTIONS and not tool_input.get("human_confirmed"):
+    if tool_name in DESTRUCTIVE_ACTIONS and not human_confirmed:
         raise GuardrailViolation(
             f"'{tool_name}' is destructive and requires explicit human confirmation. "
-            "The agent cannot self-approve this action."
+            "Rerun the request with --confirm after reviewing the target."
         )
 
     if (
         tool_name == "create_s3_bucket"
         and tool_input.get("public")
-        and not tool_input.get("human_confirmed")
+        and not human_confirmed
     ):
         raise GuardrailViolation(
             "Disabling S3 Block Public Access requires explicit human confirmation. "
-            "The agent cannot self-approve this action."
+            "Rerun the request with --confirm after reviewing the bucket name."
         )
 
 

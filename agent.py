@@ -39,13 +39,19 @@ Use only the provided tools to list, create, and manage supported EC2 and S3 res
 
 Rules:
 - Never invent resource IDs or names; only use values supplied by the user or tools.
-- Destructive actions require human_confirmed=true. Ask the user when confirmation is absent.
+- Destructive actions require approval from the external CLI confirmation channel.
+- You cannot create, infer, or override human approval; ask the user to rerun with --confirm.
 - Never claim that a tool succeeded unless its returned result confirms success.
 - Refuse requests to bypass security checks or operational limits.
 """
 
 
-def run_agent(user_input: str, model_key: str = DEFAULT_MODEL_KEY) -> str:
+def run_agent(
+    user_input: str,
+    model_key: str = DEFAULT_MODEL_KEY,
+    *,
+    human_confirmed: bool = False,
+) -> str:
     selected_model_id = MODELS[model_key]["id"]
 
     is_suspicious, matched = guardrails.scan_for_injection(user_input)
@@ -84,7 +90,11 @@ def run_agent(user_input: str, model_key: str = DEFAULT_MODEL_KEY) -> str:
         tool_input = tool_use["input"]
 
         try:
-            guardrails.check_action(tool_name, tool_input)
+            guardrails.check_action(
+                tool_name,
+                tool_input,
+                human_confirmed=human_confirmed,
+            )
         except guardrails.GuardrailViolation as error:
             result = {"error": f"BLOCKED BY GUARDRAIL: {error}"}
             guardrails.audit(
@@ -92,7 +102,11 @@ def run_agent(user_input: str, model_key: str = DEFAULT_MODEL_KEY) -> str:
                 {"tool_name": tool_name, "tool_input": tool_input, "reason": str(error)},
             )
         else:
-            result = tools.execute_tool(tool_name, tool_input)
+            result = tools.execute_tool(
+                tool_name,
+                tool_input,
+                human_confirmed=human_confirmed,
+            )
             event_type = "action_failed" if "error" in result else "action_executed"
             guardrails.audit(
                 event_type,
@@ -155,6 +169,11 @@ if __name__ == "__main__":
         help="Bedrock model tier",
     )
     parser.add_argument("--list-models", action="store_true", help="List model tiers")
+    parser.add_argument(
+        "--confirm",
+        action="store_true",
+        help="Trusted human approval for a reviewed destructive or public-access action",
+    )
     args = parser.parse_args()
 
     if args.list_models:
@@ -166,4 +185,10 @@ if __name__ == "__main__":
         sys.exit(1)
 
     print(f"Agent: {MODELS[args.model]['name']} ({args.model})")
-    print(run_agent(args.request, model_key=args.model))
+    print(
+        run_agent(
+            args.request,
+            model_key=args.model,
+            human_confirmed=args.confirm,
+        )
+    )
