@@ -1,7 +1,7 @@
 # Platform AI CLI
 
 [![CI](https://github.com/EthicalNayro/platform-ai-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/EthicalNayro/platform-ai-cli/actions/workflows/ci.yml)
-![Python](https://img.shields.io/badge/Python-3.9%2B-3776AB?logo=python&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)
 ![AWS](https://img.shields.io/badge/AWS-Bedrock%20%7C%20EC2%20%7C%20S3%20%7C%20Route53-FF9900?logo=amazonaws&logoColor=white)
 
 A guarded self-service interface for managing selected AWS resources through either a conventional Python CLI or natural-language requests powered by Amazon Bedrock.
@@ -60,7 +60,7 @@ This layered design means a clean prompt is not automatically trusted, and a val
 
 ### Prerequisites
 
-- Python 3.9+
+- Python 3.10+
 - AWS CLI configured with an IAM identity or role
 - Least-privilege access to the AWS services you intend to use
 - Amazon Bedrock model access in `eu-west-1` for agent mode
