@@ -1,0 +1,99 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ReadEC2Inventory",
+      "Effect": "Allow",
+      "Action": "ec2:DescribeInstances",
+      "Resource": "*"
+    },
+    {
+      "Sid": "CreateAllowedEC2Instances",
+      "Effect": "Allow",
+      "Action": "ec2:RunInstances",
+      "Resource": "*",
+      "Condition": {
+        "StringEqualsIfExists": {
+          "ec2:InstanceType": [
+            "t3.micro",
+            "t2.small"
+          ],
+          "aws:RequestTag/CreatedBy": "platform-cli"
+        }
+      }
+    },
+    {
+      "Sid": "TagInstancesDuringCreation",
+      "Effect": "Allow",
+      "Action": "ec2:CreateTags",
+      "Resource": "arn:aws:ec2:*:*:instance/*",
+      "Condition": {
+        "StringEquals": {
+          "ec2:CreateAction": "RunInstances"
+        }
+      }
+    },
+    {
+      "Sid": "ManageOnlyPlatformEC2Instances",
+      "Effect": "Allow",
+      "Action": [
+        "ec2:StartInstances",
+        "ec2:StopInstances",
+        "ec2:TerminateInstances"
+      ],
+      "Resource": "arn:aws:ec2:*:*:instance/*",
+      "Condition": {
+        "StringEquals": {
+          "ec2:ResourceTag/CreatedBy": "platform-cli"
+        }
+      }
+    },
+    {
+      "Sid": "ResolveApprovedAMIs",
+      "Effect": "Allow",
+      "Action": "ssm:GetParameter",
+      "Resource": "arn:aws:ssm:*::parameter/aws/service/*"
+    },
+    {
+      "Sid": "ReadCallerIdentity",
+      "Effect": "Allow",
+      "Action": "sts:GetCallerIdentity",
+      "Resource": "*"
+    },
+    {
+      "Sid": "S3PlatformOperations",
+      "Effect": "Allow",
+      "Action": [
+        "s3:ListAllMyBuckets",
+        "s3:CreateBucket",
+        "s3:GetBucketTagging",
+        "s3:PutBucketTagging",
+        "s3:PutBucketPublicAccessBlock",
+        "s3:DeleteBucketPublicAccessBlock",
+        "s3:PutObject"
+      ],
+      "Resource": [
+        "arn:aws:s3:::*",
+        "arn:aws:s3:::*/*"
+      ]
+    },
+    {
+      "Sid": "Route53PlatformOperations",
+      "Effect": "Allow",
+      "Action": [
+        "route53:CreateHostedZone",
+        "route53:ListHostedZones",
+        "route53:ListTagsForResource",
+        "route53:ChangeTagsForResource",
+        "route53:ChangeResourceRecordSets"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "InvokeConfiguredBedrockModels",
+      "Effect": "Allow",
+      "Action": "bedrock:InvokeModel",
+      "Resource": "*"
+    }
+  ]
+}

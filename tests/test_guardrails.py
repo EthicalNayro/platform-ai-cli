@@ -23,20 +23,23 @@ class GuardrailTests(unittest.TestCase):
         with self.assertRaises(guardrails.GuardrailViolation):
             guardrails.check_action(
                 "terminate_instance",
-                {"instance_id": "i-example", "human_confirmed": False},
+                {"instance_id": "i-example"},
+                human_confirmed=False,
             )
 
     def test_confirmed_termination_passes_policy(self):
         guardrails.check_action(
             "terminate_instance",
-            {"instance_id": "i-example", "human_confirmed": True},
+            {"instance_id": "i-example"},
+            human_confirmed=True,
         )
 
     def test_public_access_change_requires_confirmation(self):
         with self.assertRaises(guardrails.GuardrailViolation):
             guardrails.check_action(
                 "create_s3_bucket",
-                {"name": "example", "public": True, "human_confirmed": False},
+                {"name": "example", "public": True},
+                human_confirmed=False,
             )
 
 
